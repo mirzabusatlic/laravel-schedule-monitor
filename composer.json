@@ -1,0 +1,28 @@
+{
+  "name": "mirzabusatlic/laravel-schedule-monitor",
+  "description": "Monitor Scheduled Jobs in Laravel",
+  "authors": [
+    {
+      "name": "Mirza Busatlic",
+      "email": "mirza.busatlic@gmail.com"
+    }
+  ],
+  "require": {
+    "illuminate/support": "5.2.*",
+    "illuminate/database": "5.2.*",
+    "illuminate/console": "5.2.*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "5.4.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Busatlic\\ScheduleMonitor\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests/TestCase.php"
+    ]
+  }
+}
