@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateTasksTable extends Migration
+class CreateScheduledEventsTable extends Migration
 {
     /**
      * Run the migrations.
