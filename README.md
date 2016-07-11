@@ -55,3 +55,9 @@ class Kernel extends ConsoleKernel
     }
 }
 ```
+
+Whenever a scheduled command is then run, the its output will be inserted into the `scheduled_events` table.
+
+| Logged | Command | Output
+|---|---|---|
+| 2016-07-11 02:21:38 | files:delete | Deleted (6391/6391) total files.
