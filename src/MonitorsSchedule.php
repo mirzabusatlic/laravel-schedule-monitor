@@ -25,7 +25,9 @@ trait MonitorsSchedule
 
             $command = $this->getCommand($event);
 
-            $path = storage_path("logs/{$command}-$date.log");
+            $filename = str_slug($command) . "-$date.log";
+
+            $path = storage_path("logs/$filename");
 
             $event->sendOutputTo($path)->after(function () use ($command, $path) {
 
@@ -45,11 +47,8 @@ trait MonitorsSchedule
      */
     private function getCommand(Event $event)
     {
-        $parts = explode('\'artisan\'', $event->command);
-
-        $command = trim(end($parts));
-
-        return $command;
+        // Return everything that comes after 'artisan'.
+        return substr($event->command, strpos($event->command, 'artisan') + strlen('artisan') + 1);
     }
 
     /**
