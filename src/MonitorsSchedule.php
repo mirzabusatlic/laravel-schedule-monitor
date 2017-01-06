@@ -31,9 +31,9 @@ trait MonitorsSchedule
 
             $event->sendOutputTo($path)->after(function () use ($command, $path) {
 
-                $output = file_get_contents($path);
-
-                $this->getRepository()->insert($command, $output);
+                if ($output = file_get_contents($path)) {
+                    $this->getRepository()->insert($command, $output);
+                }
             });
         });
     }
