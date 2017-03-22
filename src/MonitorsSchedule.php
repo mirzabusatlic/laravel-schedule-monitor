@@ -5,8 +5,8 @@ namespace Busatlic\ScheduleMonitor;
 use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Event;
 use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Container\Container;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 trait MonitorsSchedule
 {
@@ -19,11 +19,11 @@ trait MonitorsSchedule
     {
         $date = Carbon::today()->toDateString();
 
-        $events = $this->getEvents($schedule);
+        $events = new Collection($schedule->events());
 
         $events->each(function (Event $event) use ($date) {
 
-            $command = $this->getCommand($event);
+            $command = substr($event->command, strpos($event->command, 'artisan') + strlen('artisan') + 1);
 
             $filename = str_slug($command) . "-$date.log";
 
@@ -31,45 +31,19 @@ trait MonitorsSchedule
 
             $event->sendOutputTo($path)->after(function () use ($command, $path) {
 
-                if ($output = file_get_contents($path)) {
-                    $this->getRepository()->insert($command, $output);
+                if (file_exists($path) && ($output = file_get_contents($path))) {
+                    
+                    DB::table('scheduled_events')->insert([
+                        'command'   => $command,
+                        'output'    => $output,
+                        'logged_at' => Carbon::now(),
+                    ]);
                 }
             });
+
+            if (file_exists($path)) {
+                unlink($path);
+            }
         });
-    }
-
-    /**
-     * Get the command from the event.
-     *
-     * @param Event $event
-     *
-     * @return string
-     */
-    private function getCommand(Event $event)
-    {
-        // Return everything that comes after 'artisan'.
-        return substr($event->command, strpos($event->command, 'artisan') + strlen('artisan') + 1);
-    }
-
-    /**
-     * Get the collection of events.
-     *
-     * @param Schedule $schedule
-     *
-     * @return Collection
-     */
-    private function getEvents(Schedule $schedule)
-    {
-        return new Collection($schedule->events());
-    }
-
-    /**
-     * Get an instance of the ScheduledEventRepository.
-     *
-     * @return ScheduledEventRepository
-     */
-    private function getRepository()
-    {
-        return Container::getInstance()->make(ScheduledEventRepository::class);
     }
 }
