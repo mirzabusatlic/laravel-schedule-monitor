@@ -32,18 +32,16 @@ trait MonitorsSchedule
             $event->sendOutputTo($path)->after(function () use ($command, $path) {
 
                 if (file_exists($path) && ($output = file_get_contents($path))) {
-                    
+
                     DB::table('scheduled_events')->insert([
                         'command'   => $command,
                         'output'    => $output,
                         'logged_at' => Carbon::now(),
                     ]);
+
+                    unlink($path);
                 }
             });
-
-            if (file_exists($path)) {
-                unlink($path);
-            }
         });
     }
 }
