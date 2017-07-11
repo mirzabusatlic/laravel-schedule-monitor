@@ -6,11 +6,11 @@ Track the output of your scheduled tasks in a database table.
 1. Install through composer: `composer require mirzabusatlic/laravel-schedule-monitor`
 2. Add `Busatlic\ScheduleMonitor\ScheduleMonitorServiceProvider::class` to your list of `$providers` in to your `config/app.php`.
 3. Publish the migration using `php artisan vendor:publish --provider=Busatlic\\ScheduleMonitor\\ScheduleMonitorServiceProvider`.
-4. Run `php artisan migrate` to create the `schedule_events` table in your database.
+4. Run `php artisan migrate` to create the `scheduled_events` table in your database.
 
 ## Usage
 
-- In your `app/Console/Kernel.php`, include use the `Busatlic\ScheduleMonitor\MonitorsSchedule` trait.
+- In your `app/Console/Kernel.php`, include the `Busatlic\ScheduleMonitor\MonitorsSchedule` trait.
 - Call `$this->monitor($schedule)` after you've defined your scheduled commands in `schedule()`.
 
 This will look something like:
